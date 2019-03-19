@@ -1,3 +1,4 @@
 channels: [1,2,3,4]
 mode: ['single', 'single', 'single', 'single']
 pulse_width: [500,500,500,500]
+freq: 50

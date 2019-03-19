@@ -138,10 +138,11 @@ def main():
     # get node config
     config_dict = rospy.get_param('/ema/matrix')
 
-    StimChannel = config_dict['channels']
+    StimChannels = config_dict['channels']
     StimMode = config_dict['mode']
     StimPulseWidth = config_dict['pulse_width']
     StimPulseCurrent = 0
+    StimFreq = config_dict['freq']
 
     # build basic stimulator message
     stimMsg = Stimulator()
@@ -149,11 +150,6 @@ def main():
     # build basic stimulator signal message for plotting purposes
     signalMsg = Int32MultiArray()
     signalMsg.data = []
-
-    # list subscribed topics
-    # sub = {}
-    # sub['sensor'] = rospy.Subscriber('imu/sensor', Imu, callback = pedal_callback)
-    # sub['remote'] = rospy.Subscriber('imu/remote_buttons', Int8, callback = remote_callback)
     
     # list published topics
     pub = {}
@@ -162,12 +158,11 @@ def main():
     pub['signal'] = rospy.Publisher('control/stimsignal', Int32MultiArray, queue_size=10)
     
     # define loop rate (in hz)
-    rate = rospy.Rate(50)
+    rate = rospy.Rate(StimFreq)
 
     # node loop
     while not rospy.is_shutdown():
-        for channel in StimChannel:
-
+        for n, channel in enumerate(StimChannels):
             # parameters update
             if update_values is True:
                 params = { 'current_left' : left_current, 'current_right' : right_current }
@@ -177,12 +172,10 @@ def main():
             stimMsg.pulse_current = [progressive[0]*left_current, progressive[1]*right_current]
             # print(stimMsg.pulse_current)
 
-
             stimMsg.channel = channel
-            stimMsg.mode = ['single', 'single']
-            stimMsg.pulse_width = [500,500,500,500]
-            stimMsg.pulse_current = [0,0]
-
+            stimMsg.mode = StimMode[n]
+            stimMsg.pulse_width = StimPulseWidth[n]
+            stimMsg.pulse_current = StimPulseCurrent
 
             # send stimulator update
             pub['singlepulse'].publish(stimMsg)
