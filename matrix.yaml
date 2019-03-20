@@ -1,4 +1,8 @@
+## Matrix config
+#
+# channels:     list of active channels in the matrix
+# freq:         main stimulation frequency in Hz 
+#               NOTE: if channels 1,2,3,4 are being used in the matrix with 12 Hz each, then freq=12x4=48 Hz
+
 channels: [1,2,3,4]
-mode: ['single', 'single', 'single', 'single']
-pulse_width: [500,500,500,500]
 freq: 50
