@@ -2,6 +2,8 @@
   <group ns="ema">
     <!-- load config files-->
     <rosparam command="load" file="$(find ema_stim_matrix)/config/matrix.yaml" ns="matrix" />
+    <rosparam command="load" file="$(find hasomed_rehastim_stimulator)/config/stimulator.yaml" ns="stimulator" />
+
 
     <!-- launch nodes -->
     <node name="stimulator" pkg="hasomed_rehastim_stimulator" type="stimulator_node.py" output="log" respawn="true" respawn_delay="5"/>

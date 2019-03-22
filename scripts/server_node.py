@@ -5,10 +5,19 @@ import rospy
 from dynamic_reconfigure.server import Server
 from ema_stim_matrix.cfg import DynamicParamsConfig
 
+global prev_config
+
+prev_config = {'Current': 0, 'Pulse_Width': 500}
+
 def callback(config, level):
-    rospy.loginfo("""Reconfigure Request:\n\
-Current: 		{current}    \n\
-Pulse Width: 	{pulse_width}\n""".format(**config))
+    global prev_config
+
+    # prevents the user from abruptly increasing the current
+    if config['Current'] - prev_config['Current'] > 2:
+        config['Current'] = prev_config['Current'] + 2
+
+    prev_config['Current'] = config['Current']
+
     return config
 
 if __name__ == "__main__":
