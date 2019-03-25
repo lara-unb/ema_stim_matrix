@@ -69,10 +69,10 @@ def main():
             for n, channel in enumerate(StimChannels):
 
                 if onoff: # stimulation switch                    
-                    stimMsg.channel = channel
-                    stimMsg.mode = StimMode
-                    stimMsg.pulse_width = pulse_width
-                    stimMsg.pulse_current = stim_current
+                    stimMsg.channel = [channel]
+                    stimMsg.mode = [StimMode]
+                    stimMsg.pulse_width = [pulse_width]
+                    stimMsg.pulse_current = [stim_current]
 
                     # send stimulator update
                     pub['singlepulse'].publish(stimMsg)

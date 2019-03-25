@@ -5,4 +5,4 @@
 #               NOTE: if channels 1,2,3,4 are being used in the matrix with 12 Hz each, then freq=12x4=48 Hz
 
 channels: [1,2,3,4]
-freq: 50
+freq: 10
