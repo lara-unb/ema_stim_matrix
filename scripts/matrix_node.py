@@ -66,9 +66,22 @@ def main():
 
     # node loop
     while not rospy.is_shutdown():
+        for i in range(1,12+1): # repeat 12 times
+            # wait for 5 sec
+            # stimulate for 5 sec
+                # first 0.5 sec rising ramp
+                # max for 4 sec
+                # last 0.5 sec descending ramp
+
+            rospy.sleep(5.0)
+            time_i = rospy.Time.now()
+
             for n, channel in enumerate(StimChannels):
 
-                if onoff: # stimulation switch                    
+                if (rospy.Time.now() - time_i) >= rospy.Duration(5.0):
+                    break
+
+                if onoff: # stimulation switch
                     stimMsg.channel = [channel]
                     stimMsg.mode = [StimMode]
                     stimMsg.pulse_width = [pulse_width]
@@ -93,6 +106,9 @@ def main():
                 # wait for next control loop
                 stim_rate.sleep()
 
+            # send electrode updates - visualization
+            pub['channels'].publish(channel_vec)
+                
 if __name__ == '__main__':
     try:
         main()
