@@ -64,51 +64,75 @@ def main():
     # define loop rate (in hz)
     stim_rate = rospy.Rate(StimFreq)
 
+    # sequence counter
+    counter = 1;
+    state = 'off'; # off, wait, stim
+
     # node loop
     while not rospy.is_shutdown():
-        for i in range(1,12+1): # repeat 12 times
-            # wait for 5 sec
-            # stimulate for 5 sec
-                # first 0.5 sec rising ramp
-                # max for 4 sec
-                # last 0.5 sec descending ramp
 
-            rospy.sleep(5.0)
+        while state is 'off':
+            if onoff:
+                state = 'wait'
+                counter = 1
+                break
+
+            # send updates for visual purposes
+            pub['signal'].publish(0)
+            pub['channels'].publish(channel_vec) 
+
+            stim_rate.sleep()
+
+        if counter <= 12:
+            print(counter)
             time_i = rospy.Time.now()
-
-            for n, channel in enumerate(StimChannels):
-
-                if (rospy.Time.now() - time_i) >= rospy.Duration(5.0):
+            while state is 'wait':
+                if (rospy.Time.now() - time_i) > rospy.Duration.from_sec(5.0): 
+                    state = 'stim'
                     break
 
-                if onoff: # stimulation switch
+                if not onoff:
+                    state = 'off'
+                    break
+
+                # send updates for visual purposes
+                pub['signal'].publish(0)
+                pub['channels'].publish(channel_vec)
+
+                stim_rate.sleep()
+
+            while state is 'stim':
+                if (rospy.Time.now() - time_i) > rospy.Duration.from_sec(10.0): 
+                    state = 'wait'
+                    counter += 1
+                    break
+
+                if not onoff:
+                    state = 'off'
+                    break
+
+                for n, channel in enumerate(StimChannels):
                     stimMsg.channel = [channel]
                     stimMsg.mode = [StimMode]
                     stimMsg.pulse_width = [pulse_width]
                     stimMsg.pulse_current = [stim_current]
 
-                    # send stimulator update
-                    pub['singlepulse'].publish(stimMsg)
-
-                    # send current signal update for visual purposes
-                    pub['signal'].publish(stim_current)
-
                     # updates electrode signal
                     channel_vec.data[n+1] = 1 # [index] is the actual channel number
 
-                else:
-                    pub['signal'].publish(0)
+                    # send stimulator update
+                    pub['singlepulse'].publish(stimMsg)
+                    # send current signal update for visual purposes
+                    pub['signal'].publish(stim_current)
+                    # send electrode updates - visualization
+                    pub['channels'].publish(channel_vec)
 
-                # send electrode updates - visualization
-                pub['channels'].publish(channel_vec)
-                channel_vec.data[n+1] = 0
+                    # reset channel signal
+                    channel_vec.data[n+1] = 0
 
-                # wait for next control loop
-                stim_rate.sleep()
+                    # wait for next control loop
+                    stim_rate.sleep()
 
-            # send electrode updates - visualization
-            pub['channels'].publish(channel_vec)
-                
 if __name__ == '__main__':
     try:
         main()
