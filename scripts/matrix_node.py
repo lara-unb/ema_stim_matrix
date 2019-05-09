@@ -64,74 +64,108 @@ def main():
     # define loop rate (in hz)
     stim_rate = rospy.Rate(StimFreq)
 
-    # sequence counter
-    counter = 1;
-    state = 'off'; # off, wait, stim
+    start = 0 # stores start time of each repetition
+    repeat_std = 12 # repeat the sequence for 2 min
+    repeat = 12 
+    state = 'off'; # off, wait, stim, over
+    checktime = True
+    progressive = 0.0 # for current ramp
+    progressive_steps = StimFreq*0.5 # 0.5s for up/down ramp
 
     # node loop
     while not rospy.is_shutdown():
 
-        while state is 'off':
+        if state is 'off':
+            # interface checkbox on
             if onoff:
+                # starting stimulation sequence
                 state = 'wait'
-                counter = 1
-                break
-
+                checktime = True
+                repeat = repeat_std
             # send updates for visual purposes
             pub['signal'].publish(0)
             pub['channels'].publish(channel_vec) 
-
+            # try to keep the loop in a constant frequency
             stim_rate.sleep()
+            continue
 
-        if counter <= 12:
-            print(counter)
-            time_i = rospy.Time.now()
-            while state is 'wait':
-                if (rospy.Time.now() - time_i) > rospy.Duration.from_sec(5.0): 
-                    state = 'stim'
-                    break
+        elif state is 'wait':
+            print(repeat)
+            if checktime:
+                start = rospy.get_time()
+                checktime = False
+            if (rospy.get_time() - start) >= 5.0: 
+                # wait is over stimulation now
+                state = 'stim'
+                progressive = 0.0
+            if not onoff:
+                # interface checkbox off
+                state = 'off'
+            # send updates for visual purposes
+            pub['signal'].publish(0)
+            pub['channels'].publish(channel_vec)
+            # try to keep the loop in a constant frequency
+            stim_rate.sleep()
+            continue
 
-                if not onoff:
-                    state = 'off'
-                    break
-
+        elif state is 'stim':
+            if not onoff:
+                # interface checkbox off
+                state = 'off'
                 # send updates for visual purposes
                 pub['signal'].publish(0)
                 pub['channels'].publish(channel_vec)
-
+                # try to keep the loop in a constant frequency
                 stim_rate.sleep()
-
-            while state is 'stim':
-                if (rospy.Time.now() - time_i) > rospy.Duration.from_sec(10.0): 
+                continue
+            if (rospy.get_time() - start) >= 10.0:
+                repeat -= 1
+                if repeat <= 0:
+                    # exit sequence
+                    state = 'over'
+                else:
                     state = 'wait'
-                    counter += 1
-                    break
+                    checktime = True
+                # send updates for visual purposes
+                pub['signal'].publish(0)
+                pub['channels'].publish(channel_vec)
+                # try to keep the loop in a constant frequency
+                stim_rate.sleep()
+                continue
+            for n, channel in enumerate(StimChannels):
+                # up ramp from 5s to 5.5s
+                if (rospy.get_time() - start) <= 5.5: 
+                    progressive += progressive_steps
+                # down ramp from 9.5s to 10s
+                elif (rospy.get_time() - start) >= 9.5:
+                    progressive -= progressive_steps
+                else:
+                    progressive = 1.0
 
-                if not onoff:
-                    state = 'off'
-                    break
+                stimMsg.channel = [channel]
+                stimMsg.mode = [StimMode]
+                stimMsg.pulse_width = [pulse_width]
+                stimMsg.pulse_current = [progressive*stim_current]
+                # updates electrode signal
+                channel_vec.data[n+1] = 1 # [index] is the actual channel number
+                # send stimulator update
+                pub['singlepulse'].publish(stimMsg)
+                # send updates for visual purposes
+                pub['signal'].publish(progressive*stim_current)
+                pub['channels'].publish(channel_vec)
+                # reset channel signal
+                channel_vec.data[n+1] = 0
+                # try to keep the loop in a constant frequency
+                stim_rate.sleep()
+            continue
 
-                for n, channel in enumerate(StimChannels):
-                    stimMsg.channel = [channel]
-                    stimMsg.mode = [StimMode]
-                    stimMsg.pulse_width = [pulse_width]
-                    stimMsg.pulse_current = [stim_current]
-
-                    # updates electrode signal
-                    channel_vec.data[n+1] = 1 # [index] is the actual channel number
-
-                    # send stimulator update
-                    pub['singlepulse'].publish(stimMsg)
-                    # send current signal update for visual purposes
-                    pub['signal'].publish(stim_current)
-                    # send electrode updates - visualization
-                    pub['channels'].publish(channel_vec)
-
-                    # reset channel signal
-                    channel_vec.data[n+1] = 0
-
-                    # wait for next control loop
-                    stim_rate.sleep()
+        elif state is 'over':
+            # send updates for visual purposes
+            pub['signal'].publish(0)
+            pub['channels'].publish(channel_vec)
+            # try to keep the loop in a constant frequency
+            stim_rate.sleep()
+            continue
 
 if __name__ == '__main__':
     try:
