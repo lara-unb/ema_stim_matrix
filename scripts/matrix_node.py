@@ -76,6 +76,7 @@ def main():
     while not rospy.is_shutdown():
 
         if state is 'off':
+            print state
             # interface checkbox on
             if onoff:
                 # starting stimulation sequence
@@ -90,7 +91,7 @@ def main():
             continue
 
         elif state is 'wait':
-            print(repeat)
+            print state, repeat
             if checktime:
                 start = rospy.get_time()
                 checktime = False
@@ -109,6 +110,7 @@ def main():
             continue
 
         elif state is 'stim':
+            print state
             if not onoff:
                 # interface checkbox off
                 state = 'off'
@@ -133,14 +135,16 @@ def main():
                 stim_rate.sleep()
                 continue
             for n, channel in enumerate(StimChannels):
-                # up ramp from 5s to 5.5s
-                if (rospy.get_time() - start) <= 5.5: 
-                    progressive += progressive_steps
-                # down ramp from 9.5s to 10s
-                elif (rospy.get_time() - start) >= 9.5:
-                    progressive -= progressive_steps
-                else:
-                    progressive = 1.0
+                # # up ramp from 5s to 5.5s
+                # if (rospy.get_time() - start) <= 5.5: 
+                #     progressive += progressive_steps
+                # # down ramp from 9.5s to 10s
+                # elif (rospy.get_time() - start) >= 9.5:
+                #     progressive -= progressive_steps
+                # else:
+                #     progressive = 1.0
+
+                progressive = 1.0
 
                 stimMsg.channel = [channel]
                 stimMsg.mode = [StimMode]
@@ -160,6 +164,10 @@ def main():
             continue
 
         elif state is 'over':
+            print state
+            if not onoff:
+                # interface checkbox off
+                state = 'off'
             # send updates for visual purposes
             pub['signal'].publish(0)
             pub['channels'].publish(channel_vec)
