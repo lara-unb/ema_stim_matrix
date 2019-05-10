@@ -3,9 +3,11 @@
     <!-- load config files-->
     <rosparam command="load" file="$(find ema_stim_matrix)/config/matrix.yaml" ns="matrix" />
     <rosparam command="load" file="$(find hasomed_rehastim_stimulator)/config/stimulator.yaml" ns="stimulator" />
+    <rosparam command="load" file="$(find miguelabs_forcesensor)/config/forcesensor.yaml" ns="forcesensor" />
 
 
     <!-- launch nodes -->
+    <node name="forcesensor" pkg="miguelabs_forcesensor" type="forcesensor_node.py" output="screen" respawn="true" respawn_delay="5"/>
     <node name="stimulator" pkg="hasomed_rehastim_stimulator" type="stimulator_node.py" output="screen" respawn="true" respawn_delay="5"/>
     <node name="baseline" pkg="ema_stim_matrix" type="baseline_node.py" output="screen" respawn="true" respawn_delay="5"/>
     <node name="server" pkg="ema_stim_matrix" type="server_node.py" output="screen" respawn="true" respawn_delay="5"/>
