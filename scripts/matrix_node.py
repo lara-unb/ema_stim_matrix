@@ -4,7 +4,7 @@ import rospy
 import dynamic_reconfigure.client as reconfig
 
 # import ros msgs
-from std_msgs.msg import Int8, Int8MultiArray
+from std_msgs.msg import Int8, UInt16, Int8MultiArray
 from ema_common_msgs.msg import Stimulator
 
 # global variables
@@ -70,7 +70,7 @@ def main():
     state = 'off'; # off, wait, stim, over
     checktime = True
     progressive = 0.0 # for current ramp
-    progressive_steps = StimFreq*0.5 # 0.5s for up/down ramp
+    progressive_steps = 1/(StimFreq*0.5) # 0.5s for up/down ramp
 
     # node loop
     while not rospy.is_shutdown():
@@ -135,27 +135,28 @@ def main():
                 stim_rate.sleep()
                 continue
             for n, channel in enumerate(StimChannels):
-                # # up ramp from 5s to 5.5s
-                # if (rospy.get_time() - start) <= 5.5: 
-                #     progressive += progressive_steps
-                # # down ramp from 9.5s to 10s
-                # elif (rospy.get_time() - start) >= 9.5:
-                #     progressive -= progressive_steps
-                # else:
-                #     progressive = 1.0
 
-                progressive = 1.0
+                # up ramp from 5s to 5.5s
+                if (rospy.get_time() - start) <= 5.5: 
+                    progressive += progressive_steps
+                # down ramp from 9.5s to 10s
+                elif (rospy.get_time() - start) >= 9.5:
+                    progressive -= progressive_steps
+                else:
+                    progressive = 1.0
+
+                progressive = abs(progressive)
 
                 stimMsg.channel = [channel]
                 stimMsg.mode = [StimMode]
                 stimMsg.pulse_width = [pulse_width]
-                stimMsg.pulse_current = [progressive*stim_current]
+                stimMsg.pulse_current = [int(progressive*stim_current)]
                 # updates electrode signal
                 channel_vec.data[n+1] = 1 # [index] is the actual channel number
                 # send stimulator update
                 pub['singlepulse'].publish(stimMsg)
                 # send updates for visual purposes
-                pub['signal'].publish(progressive*stim_current)
+                pub['signal'].publish(int(progressive*stim_current))
                 pub['channels'].publish(channel_vec)
                 # reset channel signal
                 channel_vec.data[n+1] = 0

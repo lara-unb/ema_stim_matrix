@@ -2,7 +2,7 @@
   <group ns="ema">
     <!-- load config files-->
     <rosparam command="load" file="$(find ema_stim_matrix)/config/matrix.yaml" ns="matrix" />
-    <rosparam command="load" file="$(find hasomed_rehastim_stimulator)/config/stimulator.yaml" ns="stimulator" />
+    <rosparam command="load" file="$(find hasomed_rehastim_stimulator)/config/stim_matrix.yaml" ns="stimulator" />
     <rosparam command="load" file="$(find miguelabs_forcesensor)/config/forcesensor.yaml" ns="forcesensor" />
 
 
