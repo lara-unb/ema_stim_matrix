@@ -8,7 +8,7 @@ from ema_stim_matrix.cfg import DynamicParamsConfig
 global prev_config
 
 # used to compare past values
-prev_config = {'Current': 0, 'Pulse_Width': 500}
+prev_config = {'Current': 40, 'Pulse_Width': 0}
 
 def callback(config, level):
     global prev_config

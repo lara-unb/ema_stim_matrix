@@ -13,7 +13,7 @@ global stim_current
 global pulse_width
 
 onoff = False
-stim_current = 0
+stim_current = 40
 pulse_width = 0
 
 # come here everytime sth changes in the server 
