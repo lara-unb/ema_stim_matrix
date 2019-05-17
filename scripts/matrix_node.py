@@ -4,7 +4,7 @@ import rospy
 import dynamic_reconfigure.client as reconfig
 
 # import ros msgs
-from std_msgs.msg import Int8, UInt16, Int8MultiArray
+from std_msgs.msg import String, Int8, UInt16, Int8MultiArray
 from ema_common_msgs.msg import Stimulator
 
 # global variables
@@ -48,6 +48,7 @@ def main():
     pub['singlepulse'] = rospy.Publisher('stimulator/single_pulse', Stimulator, queue_size=10)
     pub['signal'] = rospy.Publisher('matrix/stimsignal', Int8, queue_size=10)
     pub['channels'] = rospy.Publisher('matrix/channel_vec', Int8MultiArray, queue_size=10)
+    pub['state'] = rospy.Publisher('matrix/state', String, queue_size=10)
 
     # initialize stimulation parameters
     StimChannels = config_dict['channels']
@@ -56,7 +57,7 @@ def main():
 
     # each electrode's signal - visualization
     channel_vec = Int8MultiArray()
-    channel_vec.data = [0]*(len(StimChannels)+1) # first element not used
+    channel_vec.data = [0]*(len(StimChannels)+1) # index matches channel
 
     # build basic stimulator message
     stimMsg = Stimulator()
@@ -64,11 +65,12 @@ def main():
     # define loop rate (in hz)
     stim_rate = rospy.Rate(StimFreq)
 
+    # initialize loop variables
     start = 0 # stores start time of each repetition
-    repeat_std = 12 # repeat the sequence for 2 min
-    repeat = 12 
+    repeat_max = 12 # repeat the sequence for 2 min
+    repeat_now = 12 # current repetition number
     state = 'off'; # off, wait, stim, over
-    checktime = True
+    checktime = True # Is a new repetition starting now?
     progressive = 0.0 # for current ramp
     progressive_steps = 1/(StimFreq*0.5) # 0.5s for up/down ramp
 
@@ -76,22 +78,21 @@ def main():
     while not rospy.is_shutdown():
 
         if state is 'off':
-            print state
             # interface checkbox on
             if onoff:
                 # starting stimulation sequence
                 state = 'wait'
                 checktime = True
-                repeat = repeat_std
+                repeat_now = repeat_max
             # send updates for visual purposes
             pub['signal'].publish(0)
             pub['channels'].publish(channel_vec) 
+            pub['state'].publish(state)
             # try to keep the loop in a constant frequency
             stim_rate.sleep()
             continue
 
         elif state is 'wait':
-            print state, repeat
             if checktime:
                 start = rospy.get_time()
                 checktime = False
@@ -105,24 +106,25 @@ def main():
             # send updates for visual purposes
             pub['signal'].publish(0)
             pub['channels'].publish(channel_vec)
+            pub['state'].publish(state+' | '+str(repeat_now)+' mtg')
             # try to keep the loop in a constant frequency
             stim_rate.sleep()
             continue
 
         elif state is 'stim':
-            print state
             if not onoff:
                 # interface checkbox off
                 state = 'off'
                 # send updates for visual purposes
                 pub['signal'].publish(0)
                 pub['channels'].publish(channel_vec)
+                pub['state'].publish(state+' | '+str(repeat_now)+' mtg')
                 # try to keep the loop in a constant frequency
                 stim_rate.sleep()
                 continue
             if (rospy.get_time() - start) >= 10.0:
-                repeat -= 1
-                if repeat <= 0:
+                repeat_now -= 1
+                if repeat_now <= 0:
                     # exit sequence
                     state = 'over'
                 else:
@@ -131,6 +133,7 @@ def main():
                 # send updates for visual purposes
                 pub['signal'].publish(0)
                 pub['channels'].publish(channel_vec)
+                pub['state'].publish(state+' | '+str(repeat_now)+' mtg')
                 # try to keep the loop in a constant frequency
                 stim_rate.sleep()
                 continue
@@ -158,6 +161,7 @@ def main():
                 # send updates for visual purposes
                 pub['signal'].publish(int(progressive*stim_current))
                 pub['channels'].publish(channel_vec)
+                pub['state'].publish(state+' | '+str(repeat_now)+' mtg')
                 # reset channel signal
                 channel_vec.data[n+1] = 0
                 # try to keep the loop in a constant frequency
@@ -165,13 +169,13 @@ def main():
             continue
 
         elif state is 'over':
-            print state
             if not onoff:
                 # interface checkbox off
                 state = 'off'
             # send updates for visual purposes
             pub['signal'].publish(0)
             pub['channels'].publish(channel_vec)
+            pub['state'].publish('S: '+state)
             # try to keep the loop in a constant frequency
             stim_rate.sleep()
             continue

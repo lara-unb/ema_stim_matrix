@@ -7,8 +7,8 @@
 
 
     <!-- launch nodes -->
-    <node name="forcesensor" pkg="miguelabs_forcesensor" type="forcesensor_node.py" output="screen" respawn="true" respawn_delay="5"/>
-    <node name="stimulator" pkg="hasomed_rehastim_stimulator" type="stimulator_node.py" output="screen" respawn="true" respawn_delay="5"/>
+    <node name="forcesensor" pkg="miguelabs_forcesensor" type="forcesensor_node.py" output="log" respawn="true" respawn_delay="5"/>
+    <node name="stimulator" pkg="hasomed_rehastim_stimulator" type="stimulator_node.py" output="log" respawn="true" respawn_delay="5"/>
     <node name="matrix" pkg="ema_stim_matrix" type="matrix_node.py" output="screen" respawn="true" respawn_delay="5"/>
     <node name="server" pkg="ema_stim_matrix" type="server_node.py" output="screen" respawn="true" respawn_delay="5"/>
   </group>
