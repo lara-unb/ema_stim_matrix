@@ -11,37 +11,55 @@ from ema_common_msgs.msg import Stimulator
 global onoff
 global stim_current
 global pulse_width
+global StimChannels
+global channel_vec
+global stim_rate
+global progressive_steps
 
 onoff = False
 stim_current = 40
 pulse_width = 0
+StimChannels = [1,2,3,4]
+channel_vec = Int8MultiArray()
+channel_vec.data = [0]*(len(StimChannels)+1)
+stim_rate = 0
+progressive_steps = 1/(48*0.5)
 
 # come here everytime sth changes in the server 
 def server_callback(config):
     global stim_current
     global pulse_width
     global onoff
+    global StimChannels
+    global channel_vec
+    global stim_rate
+    global progressive_steps
 
     # assign updated server parameters to global vars 
     # refer to the server node for constraints
     onoff = config['ON_OFF']
     stim_current = config['Current']
     pulse_width = config['Pulse_Width']
+    StimChannels = map(int, config['Channels'].split(','))
+    channel_vec.data = [0]*(len(StimChannels)+1)
+    stim_rate = rospy.Rate(config['Frequency'])
+    progressive_steps = 1/(config['Frequency']*0.5)
 
 def main():
     global stimMsg
     global stim_current
     global pulse_width
     global onoff
+    global StimChannels
+    global channel_vec
+    global stim_rate
+    global progressive_steps
 
     # init matrix node
     rospy.init_node('matrix', anonymous=False)
 
     # communicate with the dynamic server
     dyn_params = reconfig.Client('server', config_callback = server_callback)
-
-    # get node config
-    config_dict = rospy.get_param('/ema/matrix')
 
     # list published topics
     pub = {}
@@ -50,20 +68,11 @@ def main():
     pub['channels'] = rospy.Publisher('matrix/channel_vec', Int8MultiArray, queue_size=10)
     pub['state'] = rospy.Publisher('matrix/state', String, queue_size=10)
 
-    # initialize stimulation parameters
-    StimChannels = config_dict['channels']
-    StimMode = 'single'
-    StimFreq = config_dict['freq']
-
-    # each electrode's signal - visualization
-    channel_vec = Int8MultiArray()
-    channel_vec.data = [0]*(len(StimChannels)+1) # index matches channel
-
     # build basic stimulator message
     stimMsg = Stimulator()
-    
-    # define loop rate (in hz)
-    stim_rate = rospy.Rate(StimFreq)
+
+    # define initial loop rate (in hz)
+    stim_rate = rospy.Rate(48)
 
     # initialize loop variables
     start = 0 # stores start time of each repetition
@@ -72,7 +81,6 @@ def main():
     state = 'off'; # off, wait, stim, over
     checktime = True # Is a new repetition starting now?
     progressive = 0.0 # for current ramp
-    progressive_steps = 1/(StimFreq*0.5) # 0.5s for up/down ramp
 
     # node loop
     while not rospy.is_shutdown():
@@ -138,7 +146,6 @@ def main():
                 stim_rate.sleep()
                 continue
             for n, channel in enumerate(StimChannels):
-
                 # up ramp from 5s to 5.5s
                 if (rospy.get_time() - start) <= 5.5: 
                     progressive += progressive_steps
@@ -151,7 +158,7 @@ def main():
                 progressive = abs(progressive)
 
                 stimMsg.channel = [channel]
-                stimMsg.mode = [StimMode]
+                stimMsg.mode = ['single']
                 stimMsg.pulse_width = [pulse_width]
                 stimMsg.pulse_current = [int(progressive*stim_current)]
                 # updates electrode signal
