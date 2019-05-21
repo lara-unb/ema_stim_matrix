@@ -4,46 +4,58 @@
 % Lucas de Macedo Pinheiro
 %
 
-close all
-clear all
 
-% Import bag file
-disp('Importing bag file...');
-RawBag = rosbag('Matrix_Pilot_1M_Right_S1.bag');
+% Decide which files do you want
+Files = dir('Matrix*Right*.bag');
+% Files = dir('Matrix*Left*.bag');
 
-% Separate stim command data
-disp('Extracting stim command data from bag file...');
-StimCommandTopicFromBag = select(RawBag,'Topic','/ema/stimulator/single_pulse');
-StimCommandData = cell2table(readMessages(StimCommandTopicFromBag));
-StimCommandData = table(StimCommandData(:,1),'VariableNames',{'Data'});
-StimCommandData.Time = StimCommandTopicFromBag.MessageList.Time;
+for w = 1:length(Files)
 
-% Separate stim current data
-disp('Extracting stim current data from bag file...');
-StimCurrentTopicFromBag = select(RawBag,'Topic','/ema/matrix/stimsignal');
-StimCurrentTS = timeseries(StimCurrentTopicFromBag);
+    % Import bag file
+    fprintf('\n\nImporting "%s" bag file...\n', Files(w).name);
+    RawBag = rosbag(Files(w).name);
 
-% Separate raw wrench force data
-disp('Extracting raw force data from bag file...');
-RawForceTopicFromBag = select(RawBag,'Topic','/ema/forcesensor/loadcell');
-RawForceTS = timeseries(RawForceTopicFromBag);
-% Get the actual timestamp from sensor data (secs + nanosecs)
-ForceTimestampVec = RawForceTS.Data(:,2) + RawForceTS.Data(:,3)*1e-09;
-ForceValues = RawForceTS.Data(:,5);
-ForceTS = timeseries(ForceValues,ForceTimestampVec);
+    % Separate stim command data
+    disp('Extracting stim command data from bag file...');
+    StimCommandTopicFromBag = select(RawBag,'Topic','/ema/stimulator/single_pulse');
+    StimCommandData = cell2table(readMessages(StimCommandTopicFromBag));
+    StimCommandData = table(StimCommandData(:,1),'VariableNames',{'Data'});
+    StimCommandData.Time = StimCommandTopicFromBag.MessageList.Time;
 
-% Trim data to get the important part
-disp('Trimming data...');
-ti = StimCommandData.Time(1)-5; % 5s before stim starts
-tf = StimCommandData.Time(end)+5; % 5s after stim ends
-% Maintaining Time Series
-ForceTrim = getsamples(ForceTS,...
-    find(ForceTS.Time>ti,1):find(ForceTS.Time<tf,1,'last'));
-StimCurrentTrim = getsamples(StimCurrentTS,...
-    find(StimCurrentTS.Time>ti,1):find(StimCurrentTS.Time<tf,1,'last'));
+    % Separate stim current data
+    disp('Extracting stim current data from bag file...');
+    StimCurrentTopicFromBag = select(RawBag,'Topic','/ema/matrix/stimsignal');
+    StimCurrentTS = timeseries(StimCurrentTopicFromBag);
 
-figure;
-plot(ForceTrim);
-hold on
-plot(StimCurrentTrim./40);
-hold off
+    % Separate raw wrench force data
+    disp('Extracting raw force data from bag file...');
+    RawForceTopicFromBag = select(RawBag,'Topic','/ema/forcesensor/loadcell');
+    RawForceTS = timeseries(RawForceTopicFromBag);
+    % Get the actual timestamp from sensor data (secs + nanosecs)
+    ForceTimestampVec = RawForceTS.Data(:,2) + RawForceTS.Data(:,3)*1e-09;
+    ForceValues = RawForceTS.Data(:,5);
+    ForceTS = timeseries(ForceValues,ForceTimestampVec);
+
+    % Trim data to get the important part
+    disp('Trimming data...');
+    ti = StimCommandData.Time(1)-5; % 5s before stim starts
+    tf = StimCommandData.Time(end)+5; % 5s after stim ends
+    % Maintaining Time Series
+    ForceTrim = getsamples(ForceTS,...
+        find(ForceTS.Time>ti,1):find(ForceTS.Time<tf,1,'last'));
+    StimCurrentTrim = getsamples(StimCurrentTS,...
+        find(StimCurrentTS.Time>ti,1):find(StimCurrentTS.Time<tf,1,'last'));
+
+    % Save force and stim data to file
+    disp('Saving MAT file...');
+    save(['MATLAB_' Files(w).name(1:end-4)],'StimCommandData','ForceTrim',...
+         'StimCurrentTrim');
+
+    figure;
+    plot(ForceTrim);
+    hold on
+    plot(StimCurrentTrim./40);
+    title(Files(w).name)
+    ylim([-0.5 2.5])
+    hold off
+end
