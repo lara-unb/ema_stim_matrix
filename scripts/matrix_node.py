@@ -76,8 +76,8 @@ def main():
 
     # initialize loop variables
     start = 0 # stores start time of each repetition
-    repeat_max = 12 # repeat the sequence for 2 min
-    repeat_now = 12 # current repetition number
+    repeat_max = 36 # repeat the sequence for 2 min
+    repeat_now = 36 # current repetition number
     state = 'off'; # off, wait, stim, over
     checktime = True # Is a new repetition starting now?
     progressive = 0.0 # for current ramp
