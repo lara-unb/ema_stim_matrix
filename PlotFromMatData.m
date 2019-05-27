@@ -13,11 +13,11 @@ Files = dir('MATLAB*Right*.mat');
 for w = 1:length(Files)
     
     load(Files(w).name);
-    
+
     figure;
-    plot(ForceTrim);
+    plot(Force);
     hold on
-    plot(StimCurrentTrim./40);
+    plot(StimCurrent./40);
     title(Files(w).name(8:end-4))
     ylim([-0.5 2.5])
     hold off
@@ -30,10 +30,9 @@ for w = 1:length(Files)
     load(Files(w).name);
     
     figure;
-    plot(ForceTrim);
-    
+    plot(Force);
     hold on
-    plot(StimCurrentTrim./40);
+    plot(StimCurrent./40);
     title(Files(w).name(8:end-4))
     ylim([-0.5 2.5])
     

@@ -1,7 +1,17 @@
 % Load files
-% load('MATLAB_Matrix_Pilot_1M_Right_S1.mat')
-% load('MATLAB_Matrix_Pilot_1M_Right_S2.mat')
-% load('MATLAB_Matrix_Pilot_1M_Right_S3.mat')
+load('MATLAB_Matrix_SUB01_2M_Left_S1.mat');
+ForceTrim1 = ForceTrim;
+StimCurrentTrim1 = StimCurrentTrim;
+StimCommandData1 = StimCommandData;
+load('MATLAB_Matrix_SUB01_2M_Left_S2.mat');
+ForceTrim2 = ForceTrim;
+StimCurrentTrim2 = StimCurrentTrim;
+StimCommandData2 = StimCommandData;
+load('MATLAB_Matrix_SUB01_2M_Left_S3.mat');
+ForceTrim3 = ForceTrim;
+StimCurrentTrim3 = StimCurrentTrim;
+StimCommandData3 = StimCommandData;
+
 
 % Adjust the time to begin with zero
 Toffset = min([ForceTrim1.Time(1),StimCurrentTrim1.Time(1)]);
@@ -30,8 +40,13 @@ ForceTrim1.Data = ForceTrim1.Data - LPeakFit;
 [~,LPeakFit] = envelope(ForceTrim2.Data,80,'peak');
 ForceTrim2.Data = ForceTrim2.Data - LPeakFit;
 
-[~,LPeakFit] = envelope(ForceTrim3.Data,80,'peak');
+[~,LPeakFit] = envelope(ForceTrim3.Data,90,'peak');
 ForceTrim3.Data = ForceTrim3.Data - LPeakFit;
+
+% plot(ForceTrim3bkp)
+% hold on
+% plot(ForceTrim3bkp.Time, LPeakFit)
+% plot(ForceTrim3bkp.Time,ForceTrim3bkp.Data - LPeakFit)
 
 % Trim data at the end to concatenate 
 tf = StimCommandData1.Time(end);
@@ -82,7 +97,7 @@ figure
 plot(Force)
 hold on
 plot(StimCurrent./40)
-plot(StimCommand.Time,1.5*ones(1,length(StimCommand.Time)),'.')
+% plot(StimCommand.Time,1.5*ones(1,length(StimCommand.Time)),'.')
 
 % Saves data
-save('')
+save('MATLAB_Matrix_SUB01_2M_Left','Force','StimCurrent','StimCommand')
