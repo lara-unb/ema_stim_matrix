@@ -9,10 +9,10 @@
 %
 
 % Uncomment these for each leg
-% fprintf('\n\nRIGHT LEG DATA\n');
-% Files = dir('Matrix*Right*.bag');
-fprintf('\n\nLEFT LEG DATA\n');
-Files = dir('Matrix*Left*.bag');
+fprintf('\n\nRIGHT LEG DATA\n');
+Files = dir('Matrix*Right*.bag');
+% fprintf('\n\nLEFT LEG DATA\n');
+% Files = dir('Matrix*Left*.bag');
 
 for w = 1:length(Files)
 

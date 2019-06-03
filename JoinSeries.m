@@ -1,16 +1,27 @@
 % Load files
-load('MATLAB_Matrix_Pilot_1M_Left_S1.mat');
-ForceTrim1 = Force;
-StimCurrentTrim1 = StimCurrent;
-StimCommandData1 = StimCommand;
-load('MATLAB_Matrix_Pilot_1M_Left_S2.mat');
-ForceTrim2 = Force;
-StimCurrentTrim2 = StimCurrent;
-StimCommandData2 = StimCommand;
-load('MATLAB_Matrix_Pilot_1M_Left_S3.mat');
-ForceTrim3 = Force;
-StimCurrentTrim3 = StimCurrent;
-StimCommandData3 = StimCommand;
+
+% Uncomment these for each leg
+% fprintf('\n\nRIGHT LEG DATA\n');
+% Files = dir('MATLAB*Right*.mat');
+fprintf('\n\nLEFT LEG DATA\n');
+Files = dir('MATLAB*Left*.mat');
+
+for w = 1:length(Files)
+    load(Files(w).name);
+    if w == 1
+        ForceTrim1 = Force;
+        StimCurrentTrim1 = StimCurrent;
+        StimCommandData1 = StimCommand;
+    elseif w == 2
+        ForceTrim2 = Force;
+        StimCurrentTrim2 = StimCurrent;
+        StimCommandData2 = StimCommand;
+    elseif w == 3
+        ForceTrim3 = Force;
+        StimCurrentTrim3 = StimCurrent;
+        StimCommandData3 = StimCommand;
+    end
+end
 
 % Trim data at the end to concatenate 
 tf = StimCommandData1.Time(end);
@@ -57,10 +68,14 @@ StimCurrent = append(StimCurrentTrim1,StimCurrent);
 StimCommand = [StimCommandData1;StimCommand];
 
 % Plots final data
-figure 
+figure
 plot(Force)
 hold on
 plot(StimCurrent./40)
+title(Files(1).name(1:end-7))
+xlabel('Time (s)')
+xlim([-10 380])
+legend('Force (kg)','Stimulation (Y/N)')
 
 % Saves data
-save('MATLAB_Matrix_Pilot_1M_Left','Force','StimCurrent','StimCommand')
+save(Files(1).name(1:end-7),'Force','StimCurrent','StimCommand')

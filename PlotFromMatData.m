@@ -4,17 +4,16 @@
 % 2019-05-19
 % Lucas de Macedo Pinheiro
 % 
-%   Plot the stimulator, current and force data 
-% from mat files.
+%   Plot the stimulator and force data from mat files.
 %
 
 Files = dir('MATLAB*Right*.mat');
 for w = 1:length(Files)
     load(Files(w).name);
     figure
-    plot(ForceTrim1)
+    plot(Force)
     hold on
-    plot(StimCurrentTrim1./40)
+    plot(StimCurrent./40)
     title(Files(w).name(8:end-4))
     xlabel('Time (s)')
     xlim([-10 380])
