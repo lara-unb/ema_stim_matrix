@@ -155,7 +155,7 @@ def main():
                 else:
                     progressive = 1.0
 
-                progressive = abs(progressive)
+                progressive = max(min(progressive,1),0)
 
                 stimMsg.channel = [channel]
                 stimMsg.mode = ['single']
