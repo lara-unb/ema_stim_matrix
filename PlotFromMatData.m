@@ -1,40 +1,32 @@
 %
-%
 % MATLAB code - EMA Matrix Experiments
 % 2019-05-19
 % Lucas de Macedo Pinheiro
 % 
 %   Plot the stimulator and force data from mat files.
 %
+%
 
-Files = dir('MATLAB*Right*.mat');
-for w = 1:length(Files)
-    load(Files(w).name);
-    figure
-    plot(Force)
-    hold on
-    plot(StimCurrent.Time, StimCurrent.Data./40)
-    title(Files(w).name(8:end-4))
-    xlabel('Time (s)')
-    ylabel(' ')
-    xlim([-10 380])
-    legend('Force (kg)','Stimulation (y/n)')
-    hold off
-    savefig([Files(w).name(8:end-4) '.fig']);
+clear; close all;
+
+% Open window for file selection
+disp('Select the MAT files...');
+Files = uigetfile('*.mat','Select The MAT Files','MultiSelect','on');
+if isa(Files,'char') % Only one file selected
+   Files = {Files}; 
 end
 
-Files = dir('MATLAB*Left*.mat');
 for w = 1:length(Files)
-    load(Files(w).name);
+    load(Files{w});
+    
     figure
     plot(Force)
     hold on
     plot(StimCurrent.Time, StimCurrent.Data./40)
-    title(Files(w).name(8:end-4))
-    xlabel('Time (s)')
-    ylabel(' ')
     xlim([-10 380])
-    legend('Force (kg)','Stimulation (y/n)')
+    ylabel(' '), xlabel('Time (s)')
+    title(Files{w}(15:end-4)), legend('Force (kg)','Stimulation (y/n)')
     hold off
-    savefig([Files(w).name(8:end-4) '.fig']);
+    
+    savefig([Files{w}(15:end-4) '.fig']);
 end
