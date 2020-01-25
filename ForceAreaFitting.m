@@ -72,6 +72,7 @@ for w = 1:length(Files)
     FTI.std = std(AreasVecValid);
     fprintf('FTI (Mean?SD): %.3f?%.3f\n',FTI.mean,FTI.std);
 
+% Plot data
     figure
     hold on
     yyaxis left % Left Y axis 
@@ -80,14 +81,23 @@ for w = 1:length(Files)
     title(Files{w}(1:end-4),'Interpreter', 'none')
     LimitsL = [-.19 2]; ylim(LimitsL); box on;
     yyaxis right  % Right Y axis 
-    plot(CurveFitData,MidStimTimes,AreasVec,'o',ExcludeIdx,'x')
+    
+    if ~isempty(ExcludeIdx)
+        ExcludeVec = false(1,length(AreasVec));
+        ExcludeVec(ExcludeIdx) = true;
+        plot(CurveFitData,MidStimTimes,AreasVec,'o',ExcludeVec,'x')
+        legend('Force','FTI','Excluded','FTI Fit','Location','Best')
+    else
+        plot(CurveFitData,MidStimTimes,AreasVec,'o')
+        legend('Force','FTI','FTI Fit','Location','Best')
+    end
+    
     LimitsR = [0 6.2];
     ylim([LimitsL(1)*LimitsR(2)/LimitsL(2) LimitsR(2)])
     ylabel('Force-Time Integral (kgf.s)'), xlabel('Time (s)')
-    legend('Force','FTI','FTI Fit','Location','Best')
-%     legend('Force','FTI','Excluded','FTI Fit','Location','Best')
     hold off
-    
+
+% Save data 
     disp('Saving figure and file...');
     savefig([Files{w}(1:end-4) '_Fitted.fig']);
     save(Files{w},'ForceNorm','ExcludeIdx','MidStimTimes','AreasVec',...
