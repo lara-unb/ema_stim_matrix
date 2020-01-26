@@ -3,11 +3,11 @@
 % 2019-07-18
 % Lucas de Macedo Pinheiro
 % 
-%   Gather data from mat files and store it.
+%   Gather fit data from mat files.
 %
 %
 
-% clear; close all;
+clear; close all;
 
 % Open window for file selection
 disp('Select the MAT files...');

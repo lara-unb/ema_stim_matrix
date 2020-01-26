@@ -19,18 +19,25 @@ end
 ExcludeIdx = [];
 % ExcludeIdx = [1,2];
 
+%%
 for w = 1:length(Files)
 % Import MAT file
-    fprintf('\n\nLoading "%s" file...\n', Files{w});
-    load(Files{w});
-    %%
-% Normalize the force data
+    fprintf('\n\n%d/%d Loading "%s" file...\n',w,length(Files),Files{w});
+      load(Files{w});
+
+%% Normalize the force data
     disp('Normalizing force...');
     ForceNorm = Force;
-    ForceNorm.Data = ForceNorm.Data/max(ForceNorm.Data);
+%     ForceNorm.Data = ForceNorm.Data/max(ForceNorm.Data);
+
+    [PeakValues,PeakIdx] = findpeaks(ForceNorm.Data,...
+        'MinPeakDistance',50,'MinPeakHeight',0.2);
+    PeakValues(ExcludeIdx) = [];
+    ForceNorm.Data = ForceNorm.Data/max(PeakValues);
+    
 %     ForceNorm.Data = ForceNorm.Data/max(ForceNorm.Data(229:end));
     
-% Calculate the force integral during stimulation sequences
+%% Calculate the force integral during stimulation sequences
     disp('Calculating areas...');
     StimEdges = find(diff(StimCommandZeroed.Time)>4); % Edge threshold
     StimEdges = sort([StimEdges; StimEdges+1]); % Both rising and falling edges
@@ -50,7 +57,7 @@ for w = 1:length(Files)
 %     MidStimTimes = ForceNorm.Time(round(mean(IndexM,2)));
     MidStimTimes = (7.5:10:357.5)';
 
-% Perform data fitting w/ poly1 (a*x + b)
+%% Perform data fitting w/ poly1 (a*x + b)
 %
 % Default:
 %	Normalize:'off', Exclude:[], Weights:[], Method:'NonlinearLeastSquares',
@@ -70,9 +77,9 @@ for w = 1:length(Files)
     fprintf('COEF: %.3f(%.3f,%.3f)\n',1e3*CurveFitCoefs(1),1e3*CurveFitCI(1,1),1e3*CurveFitCI(2,1));
     FTI.mean = mean(AreasVecValid);
     FTI.std = std(AreasVecValid);
-    fprintf('FTI (Mean?SD): %.3f?%.3f\n',FTI.mean,FTI.std);
+    fprintf('FTI (Mean\x00B1SD): %.3f\x00B1%.3f\n',FTI.mean,FTI.std);
 
-% Plot data
+%% Plot data
     figure
     hold on
     yyaxis left % Left Y axis 
@@ -97,7 +104,7 @@ for w = 1:length(Files)
     ylabel('Force-Time Integral (kgf.s)'), xlabel('Time (s)')
     hold off
 
-% Save data 
+%% Save data 
     disp('Saving figure and file...');
     savefig([Files{w}(1:end-4) '_Fitted.fig']);
     save(Files{w},'ForceNorm','ExcludeIdx','MidStimTimes','AreasVec',...
