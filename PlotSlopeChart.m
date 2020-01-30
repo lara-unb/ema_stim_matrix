@@ -59,8 +59,8 @@ colors = {...
 
 figure
 hold on
-plot(L1SES.f, L1SES.s,'o',L1SDSS.f, L1SDSS.s,'v','Color',colors{1},'MarkerFaceColor',colors{1});
-plot(L2SES.f, L2SES.s,'o',L2SDSS.f, L2SDSS.s,'v','Color',colors{2},'MarkerFaceColor',colors{2});
+plot(L1SES.f, L1SES.s,'o',L1SDSS.f, L1SDSS.s,'v','Color',colors{1},'MarkerFaceColor',colors{1},'MarkerSize',10);
+plot(L2SES.f, L2SES.s,'o',L2SDSS.f, L2SDSS.s,'v','Color',colors{2},'MarkerFaceColor',colors{2},'MarkerSize',10);
 xlabel 'FTI mean'
 ylabel 'FTI Fitting Slope'
 title(['P' num2str(str2double(Fields{1}(8))+1) ' Left Leg']); box on; grid on;
@@ -73,33 +73,33 @@ Xrange = xlim;
 ErrorCapX = 0.1*(Yrange(2)-Yrange(1));
 ErrorCapY = 0.1*(Xrange(2)-Xrange(1));
 
-line([L1SES.f-L1SES.ff L1SES.f+L1SES.ff],[L1SES.s L1SES.s],'Color',colors{1}); % ErrorBarX
-line([L1SES.f-L1SES.ff L1SES.f-L1SES.ff],[L1SES.s+ErrorCapX/2 L1SES.s-ErrorCapX/2],'Color',colors{1}); % ErrorCapX
-line([L1SES.f+L1SES.ff L1SES.f+L1SES.ff],[L1SES.s+ErrorCapX/2 L1SES.s-ErrorCapX/2],'Color',colors{1}); % ErrorCapX
-line([L1SES.f L1SES.f],[L1SES.s-L1SES.ss L1SES.s+L1SES.ss],'Color',colors{1}); % ErrorBarY
-line([L1SES.f-ErrorCapY/2 L1SES.f+ErrorCapY/2],[L1SES.s+L1SES.ss L1SES.s+L1SES.ss],'Color',colors{1}); % ErrorCapY
-line([L1SES.f-ErrorCapY/2 L1SES.f+ErrorCapY/2],[L1SES.s-L1SES.ss L1SES.s-L1SES.ss],'Color',colors{1}); % ErrorCapY
+line([L2SES.f-L2SES.ff L2SES.f+L2SES.ff],[L2SES.s L2SES.s],'Color',colors{2},'LineWidth',1.8); % ErrorBarX
+line([L2SES.f-L2SES.ff L2SES.f-L2SES.ff],[L2SES.s+ErrorCapX/2 L2SES.s-ErrorCapX/2],'Color',colors{2},'LineWidth',1.8); % ErrorCapX
+line([L2SES.f+L2SES.ff L2SES.f+L2SES.ff],[L2SES.s+ErrorCapX/2 L2SES.s-ErrorCapX/2],'Color',colors{2},'LineWidth',1.8); % ErrorCapX
+line([L2SES.f L2SES.f],[L2SES.s-L2SES.ss L2SES.s+L2SES.ss],'Color',colors{2},'LineWidth',1.8); % ErrorBarY
+line([L2SES.f-ErrorCapY/2 L2SES.f+ErrorCapY/2],[L2SES.s+L2SES.ss L2SES.s+L2SES.ss],'Color',colors{2},'LineWidth',1.8); % ErrorCapY
+line([L2SES.f-ErrorCapY/2 L2SES.f+ErrorCapY/2],[L2SES.s-L2SES.ss L2SES.s-L2SES.ss],'Color',colors{2},'LineWidth',1.8); % ErrorCapY
 
-line([L1SDSS.f-L1SDSS.ff L1SDSS.f+L1SDSS.ff],[L1SDSS.s L1SDSS.s],'Color',colors{1}); % ErrorBarX
-line([L1SDSS.f-L1SDSS.ff L1SDSS.f-L1SDSS.ff],[L1SDSS.s+ErrorCapX/2 L1SDSS.s-ErrorCapX/2],'Color',colors{1}); % ErrorCapX
-line([L1SDSS.f+L1SDSS.ff L1SDSS.f+L1SDSS.ff],[L1SDSS.s+ErrorCapX/2 L1SDSS.s-ErrorCapX/2],'Color',colors{1}); % ErrorCapX
-line([L1SDSS.f L1SDSS.f],[L1SDSS.s-L1SDSS.ss L1SDSS.s+L1SDSS.ss],'Color',colors{1}); % ErrorBarY
-line([L1SDSS.f-ErrorCapY/2 L1SDSS.f+ErrorCapY/2],[L1SDSS.s+L1SDSS.ss L1SDSS.s+L1SDSS.ss],'Color',colors{1}); % ErrorCapY
-line([L1SDSS.f-ErrorCapY/2 L1SDSS.f+ErrorCapY/2],[L1SDSS.s-L1SDSS.ss L1SDSS.s-L1SDSS.ss],'Color',colors{1}); % ErrorCapY
+line([L2SDSS.f-L2SDSS.ff L2SDSS.f+L2SDSS.ff],[L2SDSS.s L2SDSS.s],'Color',colors{2},'LineWidth',1.8); % ErrorBarX
+line([L2SDSS.f-L2SDSS.ff L2SDSS.f-L2SDSS.ff],[L2SDSS.s+ErrorCapX/2 L2SDSS.s-ErrorCapX/2],'Color',colors{2},'LineWidth',1.8); % ErrorCapX
+line([L2SDSS.f+L2SDSS.ff L2SDSS.f+L2SDSS.ff],[L2SDSS.s+ErrorCapX/2 L2SDSS.s-ErrorCapX/2],'Color',colors{2},'LineWidth',1.8); % ErrorCapX
+line([L2SDSS.f L2SDSS.f],[L2SDSS.s-L2SDSS.ss L2SDSS.s+L2SDSS.ss],'Color',colors{2},'LineWidth',1.8); % ErrorBarY
+line([L2SDSS.f-ErrorCapY/2 L2SDSS.f+ErrorCapY/2],[L2SDSS.s+L2SDSS.ss L2SDSS.s+L2SDSS.ss],'Color',colors{2},'LineWidth',1.8); % ErrorCapY
+line([L2SDSS.f-ErrorCapY/2 L2SDSS.f+ErrorCapY/2],[L2SDSS.s-L2SDSS.ss L2SDSS.s-L2SDSS.ss],'Color',colors{2},'LineWidth',1.8); % ErrorCapY
 
-line([L2SES.f-L2SES.ff L2SES.f+L2SES.ff],[L2SES.s L2SES.s],'Color',colors{2}); % ErrorBarX
-line([L2SES.f-L2SES.ff L2SES.f-L2SES.ff],[L2SES.s+ErrorCapX/2 L2SES.s-ErrorCapX/2],'Color',colors{2}); % ErrorCapX
-line([L2SES.f+L2SES.ff L2SES.f+L2SES.ff],[L2SES.s+ErrorCapX/2 L2SES.s-ErrorCapX/2],'Color',colors{2}); % ErrorCapX
-line([L2SES.f L2SES.f],[L2SES.s-L2SES.ss L2SES.s+L2SES.ss],'Color',colors{2}); % ErrorBarY
-line([L2SES.f-ErrorCapY/2 L2SES.f+ErrorCapY/2],[L2SES.s+L2SES.ss L2SES.s+L2SES.ss],'Color',colors{2}); % ErrorCapY
-line([L2SES.f-ErrorCapY/2 L2SES.f+ErrorCapY/2],[L2SES.s-L2SES.ss L2SES.s-L2SES.ss],'Color',colors{2}); % ErrorCapY
+line([L1SES.f-L1SES.ff L1SES.f+L1SES.ff],[L1SES.s L1SES.s],'Color',colors{1},'LineWidth',1.8); % ErrorBarX
+line([L1SES.f-L1SES.ff L1SES.f-L1SES.ff],[L1SES.s+ErrorCapX/2 L1SES.s-ErrorCapX/2],'Color',colors{1},'LineWidth',1.8); % ErrorCapX
+line([L1SES.f+L1SES.ff L1SES.f+L1SES.ff],[L1SES.s+ErrorCapX/2 L1SES.s-ErrorCapX/2],'Color',colors{1},'LineWidth',1.8); % ErrorCapX
+line([L1SES.f L1SES.f],[L1SES.s-L1SES.ss L1SES.s+L1SES.ss],'Color',colors{1},'LineWidth',1.8); % ErrorBarY
+line([L1SES.f-ErrorCapY/2 L1SES.f+ErrorCapY/2],[L1SES.s+L1SES.ss L1SES.s+L1SES.ss],'Color',colors{1},'LineWidth',1.8); % ErrorCapY
+line([L1SES.f-ErrorCapY/2 L1SES.f+ErrorCapY/2],[L1SES.s-L1SES.ss L1SES.s-L1SES.ss],'Color',colors{1},'LineWidth',1.8); % ErrorCapY
 
-line([L2SDSS.f-L2SDSS.ff L2SDSS.f+L2SDSS.ff],[L2SDSS.s L2SDSS.s],'Color',colors{2}); % ErrorBarX
-line([L2SDSS.f-L2SDSS.ff L2SDSS.f-L2SDSS.ff],[L2SDSS.s+ErrorCapX/2 L2SDSS.s-ErrorCapX/2],'Color',colors{2}); % ErrorCapX
-line([L2SDSS.f+L2SDSS.ff L2SDSS.f+L2SDSS.ff],[L2SDSS.s+ErrorCapX/2 L2SDSS.s-ErrorCapX/2],'Color',colors{2}); % ErrorCapX
-line([L2SDSS.f L2SDSS.f],[L2SDSS.s-L2SDSS.ss L2SDSS.s+L2SDSS.ss],'Color',colors{2}); % ErrorBarY
-line([L2SDSS.f-ErrorCapY/2 L2SDSS.f+ErrorCapY/2],[L2SDSS.s+L2SDSS.ss L2SDSS.s+L2SDSS.ss],'Color',colors{2}); % ErrorCapY
-line([L2SDSS.f-ErrorCapY/2 L2SDSS.f+ErrorCapY/2],[L2SDSS.s-L2SDSS.ss L2SDSS.s-L2SDSS.ss],'Color',colors{2}); % ErrorCapY
+line([L1SDSS.f-L1SDSS.ff L1SDSS.f+L1SDSS.ff],[L1SDSS.s L1SDSS.s],'Color',colors{1},'LineWidth',1.8); % ErrorBarX
+line([L1SDSS.f-L1SDSS.ff L1SDSS.f-L1SDSS.ff],[L1SDSS.s+ErrorCapX/2 L1SDSS.s-ErrorCapX/2],'Color',colors{1},'LineWidth',1.8); % ErrorCapX
+line([L1SDSS.f+L1SDSS.ff L1SDSS.f+L1SDSS.ff],[L1SDSS.s+ErrorCapX/2 L1SDSS.s-ErrorCapX/2],'Color',colors{1},'LineWidth',1.8); % ErrorCapX
+line([L1SDSS.f L1SDSS.f],[L1SDSS.s-L1SDSS.ss L1SDSS.s+L1SDSS.ss],'Color',colors{1},'LineWidth',1.8); % ErrorBarY
+line([L1SDSS.f-ErrorCapY/2 L1SDSS.f+ErrorCapY/2],[L1SDSS.s+L1SDSS.ss L1SDSS.s+L1SDSS.ss],'Color',colors{1},'LineWidth',1.8); % ErrorCapY
+line([L1SDSS.f-ErrorCapY/2 L1SDSS.f+ErrorCapY/2],[L1SDSS.s-L1SDSS.ss L1SDSS.s-L1SDSS.ss],'Color',colors{1},'LineWidth',1.8); % ErrorCapY
 
 hold off
 
@@ -117,8 +117,8 @@ colors = {...
 
 figure
 hold on
-plot(R1SES.f, R1SES.s,'o',R1SDSS.f, R1SDSS.s,'v','Color',colors{1},'MarkerFaceColor',colors{1});
-plot(R2SES.f, R2SES.s,'o',R2SDSS.f, R2SDSS.s,'v','Color',colors{2},'MarkerFaceColor',colors{2});
+plot(R1SES.f, R1SES.s,'o',R1SDSS.f, R1SDSS.s,'v','Color',colors{1},'MarkerFaceColor',colors{1},'MarkerSize',10);
+plot(R2SES.f, R2SES.s,'o',R2SDSS.f, R2SDSS.s,'v','Color',colors{2},'MarkerFaceColor',colors{2},'MarkerSize',10);
 xlabel 'FTI mean'
 ylabel 'FTI Fitting Slope'
 title(['P' num2str(str2double(Fields{1}(8))+1) ' Right Leg']); box on; grid on;
@@ -131,33 +131,33 @@ Xrange = xlim;
 ErrorCapX = 0.1*(Yrange(2)-Yrange(1));
 ErrorCapY = 0.1*(Xrange(2)-Xrange(1));
 
-line([R1SES.f-R1SES.ff R1SES.f+R1SES.ff],[R1SES.s R1SES.s],'Color',colors{1}); % ErrorBarX
-line([R1SES.f-R1SES.ff R1SES.f-R1SES.ff],[R1SES.s+ErrorCapX/2 R1SES.s-ErrorCapX/2],'Color',colors{1}); % ErrorCapX
-line([R1SES.f+R1SES.ff R1SES.f+R1SES.ff],[R1SES.s+ErrorCapX/2 R1SES.s-ErrorCapX/2],'Color',colors{1}); % ErrorCapX
-line([R1SES.f R1SES.f],[R1SES.s-R1SES.ss R1SES.s+R1SES.ss],'Color',colors{1}); % ErrorBarY
-line([R1SES.f-ErrorCapY/2 R1SES.f+ErrorCapY/2],[R1SES.s+R1SES.ss R1SES.s+R1SES.ss],'Color',colors{1}); % ErrorCapY
-line([R1SES.f-ErrorCapY/2 R1SES.f+ErrorCapY/2],[R1SES.s-R1SES.ss R1SES.s-R1SES.ss],'Color',colors{1}); % ErrorCapY
+line([R1SES.f-R1SES.ff R1SES.f+R1SES.ff],[R1SES.s R1SES.s],'Color',colors{1},'LineWidth',1.8); % ErrorBarX
+line([R1SES.f-R1SES.ff R1SES.f-R1SES.ff],[R1SES.s+ErrorCapX/2 R1SES.s-ErrorCapX/2],'Color',colors{1},'LineWidth',1.8); % ErrorCapX
+line([R1SES.f+R1SES.ff R1SES.f+R1SES.ff],[R1SES.s+ErrorCapX/2 R1SES.s-ErrorCapX/2],'Color',colors{1},'LineWidth',1.8); % ErrorCapX
+line([R1SES.f R1SES.f],[R1SES.s-R1SES.ss R1SES.s+R1SES.ss],'Color',colors{1},'LineWidth',1.8); % ErrorBarY
+line([R1SES.f-ErrorCapY/2 R1SES.f+ErrorCapY/2],[R1SES.s+R1SES.ss R1SES.s+R1SES.ss],'Color',colors{1},'LineWidth',1.8); % ErrorCapY
+line([R1SES.f-ErrorCapY/2 R1SES.f+ErrorCapY/2],[R1SES.s-R1SES.ss R1SES.s-R1SES.ss],'Color',colors{1},'LineWidth',1.8); % ErrorCapY
 
-line([R1SDSS.f-R1SDSS.ff R1SDSS.f+R1SDSS.ff],[R1SDSS.s R1SDSS.s],'Color',colors{1}); % ErrorBarX
-line([R1SDSS.f-R1SDSS.ff R1SDSS.f-R1SDSS.ff],[R1SDSS.s+ErrorCapX/2 R1SDSS.s-ErrorCapX/2],'Color',colors{1}); % ErrorCapX
-line([R1SDSS.f+R1SDSS.ff R1SDSS.f+R1SDSS.ff],[R1SDSS.s+ErrorCapX/2 R1SDSS.s-ErrorCapX/2],'Color',colors{1}); % ErrorCapX
-line([R1SDSS.f R1SDSS.f],[R1SDSS.s-R1SDSS.ss R1SDSS.s+R1SDSS.ss],'Color',colors{1}); % ErrorBarY
-line([R1SDSS.f-ErrorCapY/2 R1SDSS.f+ErrorCapY/2],[R1SDSS.s+R1SDSS.ss R1SDSS.s+R1SDSS.ss],'Color',colors{1}); % ErrorCapY
-line([R1SDSS.f-ErrorCapY/2 R1SDSS.f+ErrorCapY/2],[R1SDSS.s-R1SDSS.ss R1SDSS.s-R1SDSS.ss],'Color',colors{1}); % ErrorCapY
+line([R1SDSS.f-R1SDSS.ff R1SDSS.f+R1SDSS.ff],[R1SDSS.s R1SDSS.s],'Color',colors{1},'LineWidth',1.8); % ErrorBarX
+line([R1SDSS.f-R1SDSS.ff R1SDSS.f-R1SDSS.ff],[R1SDSS.s+ErrorCapX/2 R1SDSS.s-ErrorCapX/2],'Color',colors{1},'LineWidth',1.8); % ErrorCapX
+line([R1SDSS.f+R1SDSS.ff R1SDSS.f+R1SDSS.ff],[R1SDSS.s+ErrorCapX/2 R1SDSS.s-ErrorCapX/2],'Color',colors{1},'LineWidth',1.8); % ErrorCapX
+line([R1SDSS.f R1SDSS.f],[R1SDSS.s-R1SDSS.ss R1SDSS.s+R1SDSS.ss],'Color',colors{1},'LineWidth',1.8); % ErrorBarY
+line([R1SDSS.f-ErrorCapY/2 R1SDSS.f+ErrorCapY/2],[R1SDSS.s+R1SDSS.ss R1SDSS.s+R1SDSS.ss],'Color',colors{1},'LineWidth',1.8); % ErrorCapY
+line([R1SDSS.f-ErrorCapY/2 R1SDSS.f+ErrorCapY/2],[R1SDSS.s-R1SDSS.ss R1SDSS.s-R1SDSS.ss],'Color',colors{1},'LineWidth',1.8); % ErrorCapY
 
-line([R2SES.f-R2SES.ff R2SES.f+R2SES.ff],[R2SES.s R2SES.s],'Color',colors{2}); % ErrorBarX
-line([R2SES.f-R2SES.ff R2SES.f-R2SES.ff],[R2SES.s+ErrorCapX/2 R2SES.s-ErrorCapX/2],'Color',colors{2}); % ErrorCapX
-line([R2SES.f+R2SES.ff R2SES.f+R2SES.ff],[R2SES.s+ErrorCapX/2 R2SES.s-ErrorCapX/2],'Color',colors{2}); % ErrorCapX
-line([R2SES.f R2SES.f],[R2SES.s-R2SES.ss R2SES.s+R2SES.ss],'Color',colors{2}); % ErrorBarY
-line([R2SES.f-ErrorCapY/2 R2SES.f+ErrorCapY/2],[R2SES.s+R2SES.ss R2SES.s+R2SES.ss],'Color',colors{2}); % ErrorCapY
-line([R2SES.f-ErrorCapY/2 R2SES.f+ErrorCapY/2],[R2SES.s-R2SES.ss R2SES.s-R2SES.ss],'Color',colors{2}); % ErrorCapY
+line([R2SES.f-R2SES.ff R2SES.f+R2SES.ff],[R2SES.s R2SES.s],'Color',colors{2},'LineWidth',1.8); % ErrorBarX
+line([R2SES.f-R2SES.ff R2SES.f-R2SES.ff],[R2SES.s+ErrorCapX/2 R2SES.s-ErrorCapX/2],'Color',colors{2},'LineWidth',1.8); % ErrorCapX
+line([R2SES.f+R2SES.ff R2SES.f+R2SES.ff],[R2SES.s+ErrorCapX/2 R2SES.s-ErrorCapX/2],'Color',colors{2},'LineWidth',1.8); % ErrorCapX
+line([R2SES.f R2SES.f],[R2SES.s-R2SES.ss R2SES.s+R2SES.ss],'Color',colors{2},'LineWidth',1.8); % ErrorBarY
+line([R2SES.f-ErrorCapY/2 R2SES.f+ErrorCapY/2],[R2SES.s+R2SES.ss R2SES.s+R2SES.ss],'Color',colors{2},'LineWidth',1.8); % ErrorCapY
+line([R2SES.f-ErrorCapY/2 R2SES.f+ErrorCapY/2],[R2SES.s-R2SES.ss R2SES.s-R2SES.ss],'Color',colors{2},'LineWidth',1.8); % ErrorCapY
 
-line([R2SDSS.f-R2SDSS.ff R2SDSS.f+R2SDSS.ff],[R2SDSS.s R2SDSS.s],'Color',colors{2}); % ErrorBarX
-line([R2SDSS.f-R2SDSS.ff R2SDSS.f-R2SDSS.ff],[R2SDSS.s+ErrorCapX/2 R2SDSS.s-ErrorCapX/2],'Color',colors{2}); % ErrorCapX
-line([R2SDSS.f+R2SDSS.ff R2SDSS.f+R2SDSS.ff],[R2SDSS.s+ErrorCapX/2 R2SDSS.s-ErrorCapX/2],'Color',colors{2}); % ErrorCapX
-line([R2SDSS.f R2SDSS.f],[R2SDSS.s-R2SDSS.ss R2SDSS.s+R2SDSS.ss],'Color',colors{2}); % ErrorBarY
-line([R2SDSS.f-ErrorCapY/2 R2SDSS.f+ErrorCapY/2],[R2SDSS.s+R2SDSS.ss R2SDSS.s+R2SDSS.ss],'Color',colors{2}); % ErrorCapY
-line([R2SDSS.f-ErrorCapY/2 R2SDSS.f+ErrorCapY/2],[R2SDSS.s-R2SDSS.ss R2SDSS.s-R2SDSS.ss],'Color',colors{2}); % ErrorCapY
+line([R2SDSS.f-R2SDSS.ff R2SDSS.f+R2SDSS.ff],[R2SDSS.s R2SDSS.s],'Color',colors{2},'LineWidth',1.8); % ErrorBarX
+line([R2SDSS.f-R2SDSS.ff R2SDSS.f-R2SDSS.ff],[R2SDSS.s+ErrorCapX/2 R2SDSS.s-ErrorCapX/2],'Color',colors{2},'LineWidth',1.8); % ErrorCapX
+line([R2SDSS.f+R2SDSS.ff R2SDSS.f+R2SDSS.ff],[R2SDSS.s+ErrorCapX/2 R2SDSS.s-ErrorCapX/2],'Color',colors{2},'LineWidth',1.8); % ErrorCapX
+line([R2SDSS.f R2SDSS.f],[R2SDSS.s-R2SDSS.ss R2SDSS.s+R2SDSS.ss],'Color',colors{2},'LineWidth',1.8); % ErrorBarY
+line([R2SDSS.f-ErrorCapY/2 R2SDSS.f+ErrorCapY/2],[R2SDSS.s+R2SDSS.ss R2SDSS.s+R2SDSS.ss],'Color',colors{2},'LineWidth',1.8); % ErrorCapY
+line([R2SDSS.f-ErrorCapY/2 R2SDSS.f+ErrorCapY/2],[R2SDSS.s-R2SDSS.ss R2SDSS.s-R2SDSS.ss],'Color',colors{2},'LineWidth',1.8); % ErrorCapY
 
 hold off
 
