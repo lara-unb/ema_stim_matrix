@@ -1,7 +1,22 @@
 #!/usr/bin/env python
 
+"""
+
+Particularly, this code defines the electrode matrix force experiments: a
+6min trial of 36 stim sequences spaced by 5sec with 0.5sec ascending and
+descending current ramp.
+
+The ROS node runs this code. It should make all the necessary
+communication/interaction with ROS and it shouldn't deal with minor details.
+For example, it would be used to publish a filtered sensor measurement as
+a ROS message to other ROS nodes instead of establishing the serial comm
+and treating that raw measurement. For more info, check:
+http://wiki.ros.org/Nodes
+
+"""
+
 import rospy
-import dynamic_reconfigure.client as reconfig
+import dynamic_reconfigure.client
 
 # import ros msgs
 from std_msgs.msg import String, Int8, UInt16, Int8MultiArray
@@ -56,10 +71,11 @@ def main():
     global progressive_steps
 
     # init matrix node
-    rospy.init_node('matrix', anonymous=False)
+    rospy.init_node('matrix') # overwritten by launch file name
 
-    # communicate with the dynamic server
-    dyn_params = reconfig.Client('server', config_callback = server_callback)
+    # communicate with the dynamic reconfigure server 
+    dyn_params = dynamic_reconfigure.client.Client(
+                    'reconfig', config_callback=server_callback) # 'server node name'
 
     # list published topics
     pub = {}
