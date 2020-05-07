@@ -14,5 +14,5 @@
 # will be 12x4 = 48Hz.
 #
 
-channels: [1,2,3,4] # list of active channels in the matrix
-freq: 48 # overall stimulation frequency in Hz 
+channels: [1,2,3,4] # List of active channels in the matrix
+freq: 48 # Overall stimulation frequency in Hz 

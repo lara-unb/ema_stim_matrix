@@ -14,7 +14,7 @@ http://wiki.ros.org/roslaunch/XML
 	<group ns="ema">
 
 		<!-- load common config files-->
-		<rosparam command="load" file="$(find hasomed_rehastim_stimulator)/config/stim_matrix.yaml" ns="stimulator"/>
+		<rosparam command="load" file="$(find hasomed_rehastim_stimulator)/config/SINGLES.yaml" ns="stimulator"/>
 		<rosparam command="load" file="$(find miguelabs_forcesensor)/config/forcesensor.yaml" ns="forcesensor"/>
 
 		<!-- launch common nodes -->
