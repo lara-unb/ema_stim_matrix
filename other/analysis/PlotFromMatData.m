@@ -5,7 +5,7 @@
 % 
 %   Plot the stimulator and force data from mat files.
 %
-%
+% 9.8067
 
 clear; close all;
 

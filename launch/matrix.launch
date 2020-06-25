@@ -1,14 +1,30 @@
+<!--
+
+The launch file is an XML that specifies which parameters to set and ROS
+nodes to launch. It's used with a roslaunch command, which is responsible
+for doing the initial setup and starting the system. The launch file includes
+options to automatically respawn processes that have already died. This
+file is usually in the /launch subdirectory of a package. For a specification
+of this XML format, see:
+http://wiki.ros.org/roslaunch/XML
+
+-->
+
 <launch>
-  <group ns="ema">
-    <!-- load config files-->
-    <rosparam command="load" file="$(find hasomed_rehastim_stimulator)/config/stim_matrix.yaml" ns="stimulator" />
-    <rosparam command="load" file="$(find miguelabs_forcesensor)/config/forcesensor.yaml" ns="forcesensor" />
+    <group ns="ema">
 
+        <!-- load common config files-->
+        <rosparam command="load" file="$(find hasomed_rehastim_stimulator)/config/SINGLES.yaml" ns="stimulator"/>
+        <rosparam command="load" file="$(find miguelabs_forcesensor)/config/forcesensor.yaml" ns="forcesensor"/>
 
-    <!-- launch nodes -->
-    <node name="forcesensor" pkg="miguelabs_forcesensor" type="forcesensor_node.py" output="log" respawn="true" respawn_delay="5"/>
-    <node name="stimulator" pkg="hasomed_rehastim_stimulator" type="stimulator_node.py" output="log" respawn="true" respawn_delay="5"/>
-    <node name="matrix" pkg="ema_stim_matrix" type="matrix_node.py" output="screen" respawn="true" respawn_delay="5"/>
-    <node name="server" pkg="ema_stim_matrix" type="server_node.py" output="screen" respawn="true" respawn_delay="5"/>
-  </group>
+        <!-- launch common nodes -->
+        <node name="forcesensor" pkg="miguelabs_forcesensor" type="forcesensor_node.py" output="log" respawn="true" respawn_delay="5"/>
+        <node name="stimulator" pkg="hasomed_rehastim_stimulator" type="stimulator_node.py" output="log" respawn="true" respawn_delay="5"/>
+        <node name="matrix" pkg="ema_stim_matrix" type="matrix_node.py" output="screen" respawn="true" respawn_delay="5"/>
+        <node name="reconfig" pkg="ema_stim_matrix" type="matrix_server_node.py" output="screen" respawn="true" respawn_delay="5"/>
+        <node name="dashboard" pkg="rqt_gui" type="rqt_gui" output="log" args="--perspective-file $(find ema_stim_matrix)/perspective/EMA_Matrix_Force.perspective"/>
+        <node name="logger" pkg="rosbag" type="record" respawn="true" respawn_delay="5" args="/ema/matrix/stimsignal /ema/matrix/channel_vec /ema/matrix/state 
+                /ema/matrix/stimsignal /ema/stimulator/single_pulse -o $(env HOME)/bagfiles/ema_stim_matrix/ --split --max-splits 3 --duration 5m"/>
+
+    </group>
 </launch>
