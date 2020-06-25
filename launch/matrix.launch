@@ -11,20 +11,20 @@ http://wiki.ros.org/roslaunch/XML
 -->
 
 <launch>
-	<group ns="ema">
+    <group ns="ema">
 
-		<!-- load common config files-->
-		<rosparam command="load" file="$(find hasomed_rehastim_stimulator)/config/SINGLES.yaml" ns="stimulator"/>
-		<rosparam command="load" file="$(find miguelabs_forcesensor)/config/forcesensor.yaml" ns="forcesensor"/>
+        <!-- load common config files-->
+        <rosparam command="load" file="$(find hasomed_rehastim_stimulator)/config/SINGLES.yaml" ns="stimulator"/>
+        <rosparam command="load" file="$(find miguelabs_forcesensor)/config/forcesensor.yaml" ns="forcesensor"/>
 
-		<!-- launch common nodes -->
-		<node name="forcesensor" pkg="miguelabs_forcesensor" type="forcesensor_node.py" output="log" respawn="true" respawn_delay="5"/>
-		<node name="stimulator" pkg="hasomed_rehastim_stimulator" type="stimulator_node.py" output="log" respawn="true" respawn_delay="5"/>
-		<node name="matrix" pkg="ema_stim_matrix" type="matrix_node.py" output="screen" respawn="true" respawn_delay="5"/>
-		<node name="reconfig" pkg="ema_stim_matrix" type="matrix_server_node.py" output="screen" respawn="true" respawn_delay="5"/>
-		<node name="dashboard" pkg="rqt_gui" type="rqt_gui" output="log" args="--perspective-file $(find ema_stim_matrix)/perspective/EMA_Matrix_Force.perspective"/>
-		<node name="logger" pkg="rosbag" type="record" respawn="true" respawn_delay="5" args="/ema/matrix/stimsignal /ema/matrix/channel_vec /ema/matrix/state 
-				/ema/matrix/stimsignal /ema/stimulator/single_pulse -o $(env HOME)/bagfiles/ema_stim_matrix/ --split --max-splits 3 --duration 5m"/>
+        <!-- launch common nodes -->
+        <node name="forcesensor" pkg="miguelabs_forcesensor" type="forcesensor_node.py" output="log" respawn="true" respawn_delay="5"/>
+        <node name="stimulator" pkg="hasomed_rehastim_stimulator" type="stimulator_node.py" output="log" respawn="true" respawn_delay="5"/>
+        <node name="matrix" pkg="ema_stim_matrix" type="matrix_node.py" output="screen" respawn="true" respawn_delay="5"/>
+        <node name="reconfig" pkg="ema_stim_matrix" type="matrix_server_node.py" output="screen" respawn="true" respawn_delay="5"/>
+        <node name="dashboard" pkg="rqt_gui" type="rqt_gui" output="log" args="--perspective-file $(find ema_stim_matrix)/perspective/EMA_Matrix_Force.perspective"/>
+        <node name="logger" pkg="rosbag" type="record" respawn="true" respawn_delay="5" args="/ema/matrix/stimsignal /ema/matrix/channel_vec /ema/matrix/state 
+                /ema/matrix/stimsignal /ema/stimulator/single_pulse -o $(env HOME)/bagfiles/ema_stim_matrix/ --split --max-splits 3 --duration 5m"/>
 
-	</group>
+    </group>
 </launch>
